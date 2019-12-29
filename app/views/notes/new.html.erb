@@ -4,17 +4,3 @@
 
 <%= link_to 'Back', notes_path %>
 
-<script>
-    $(document).ready(function () {
-        let converter = new showdown.Converter();
-        let pad = document.getElementById('note_description');
-        let markdownArea = document.getElementById('markdown');
-        let convertTextAreaToMarkdown = function(){
-            let markdownText = pad.value;
-            let html = converter.makeHtml(markdownText);
-            markdownArea.innerHTML = html;
-        };
-        $(document).on('input', pad, convertTextAreaToMarkdown);
-        convertTextAreaToMarkdown();
-    });
-</script>

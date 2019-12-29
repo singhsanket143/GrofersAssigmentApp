@@ -40,7 +40,7 @@ gem 'jquery-rails'
 gem 'redcarpet'
 gem 'albino'
 gem 'nokogiri'
-
+gem 'toastr-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

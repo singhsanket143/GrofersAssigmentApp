@@ -1,31 +1,39 @@
-<p id="notice"><%= notice %></p>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Create New Note
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <%= render 'form', note: @note %>
+      </blockquote>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="container" id="notes">
+  <% @notes.each do |note| %>
+    <%= render 'note', note: note %>
+  <% end %>
+</div>
 
-<h1>Notes</h1>
+<div class="first wrap"><button type="button" id="scroll" style="position: fixed; bottom: 10px; right: 10px;">Scroll To Top</button></div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Is completed</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<script>
+    $(document).ready(function () {
+        let converter = new showdown.Converter();
+        let pad = document.getElementById('note_description');
+        let markdownArea = document.getElementById('markdown');
+        let convertTextAreaToMarkdown = function(){
+            let markdownText = pad.value;
+            let html = converter.makeHtml(markdownText);
+            markdownArea.innerHTML = html;
+        };
+        $(document).on('input', pad, convertTextAreaToMarkdown);
+        convertTextAreaToMarkdown();
 
-  <tbody>
-    <% @notes.each do |note| %>
-      <tr>
-        <td><%= note.title %></td>
-        <td><%= note.description %></td>
-        <td><%= note.is_completed %></td>
-        <td><%= link_to 'Show', note %></td>
-        <td><%= link_to 'Edit', edit_note_path(note) %></td>
-        <td><%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Note', new_note_path %>
+        $("#scroll").click(function() {
+            $('html,body').animate({scrollTop: $(".navbar").offset().top}, 'slow');
+        });
+    });
+</script>

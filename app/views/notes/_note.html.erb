@@ -1,0 +1,23 @@
+<div class="card text-center mt-5">
+  <div class="card-header">
+    By <%= note.user.email %>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><%= note.title %></h5>
+
+    <p>
+      <a class="btn btn-primary" data-toggle="collapse" href="#collapse_<%= note.id %>" role="button" aria-expanded="false" aria-controls="collapseExample">
+        View Note
+      </a>
+      <%= link_to 'Delete Note', note, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+    </p>
+    <div class="collapse" id="collapse_<%= note.id %>">
+      <div class="card card-body">
+        <%= markdown(note.description) %>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+    <%= time_ago_in_words(note.created_at) %>
+  </div>
+</div>

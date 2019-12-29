@@ -1,4 +1,4 @@
-<%= form_with(model: note, local: true) do |form| %>
+<%= form_for note, remote: true do |form| %>
   <% if note.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(note.errors.count, "error") %> prohibited this note from being saved:</h2>
@@ -13,23 +13,20 @@
 
   <div class="form-group">
     <%= form.label :title %>
-    <%= form.text_field :title, id: :note_title, class: "form-control" %>
+    <%= form.text_field :title, id: :note_title, class: "form-control", placeholder: "Enter the title for note" %>
   </div>
 
   <div class="form-group">
     <%= form.label :description %>
-    <%= form.text_area :description, id: :note_description, class: "form-control pad" %>
-    <div class="col-md-6 full-height" id="markdown"></div>
-  </div>
-
-  <div class="form-check">
-    <%= form.check_box :is_completed, id: :note_is_completed, class: "form-check-input" %>
-    <label class="form-check-label" for="defaultCheck1">
-     Completed
-    </label>
+    <%= form.text_area :description, id: :note_description, class: "form-control pad", placeholder: "Well...Start note taking" %>
+    <div class="card mb-3 mt-3" >
+      <div class="card-header">Preview Description</div>
+      <div class="card-body" id="markdown">
+      </div>
+    </div>
   </div>
 
   <div class="actions">
-    <%= form.submit 'Create New Note', class: "btn btn-primary" %>
+    <%= form.submit 'Submit', class: "btn btn-primary btn-lg" %>
   </div>
 <% end %>

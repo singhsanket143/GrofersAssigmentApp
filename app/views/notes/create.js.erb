@@ -1,0 +1,5 @@
+$('#notes').prepend("<%= escape_javascript (render 'note', note: @note) %>");
+$('#note_title').val("");
+$('#note_description').val("");
+$('#markdown').val("");
+toastr.success('Successfully created a new note!!!');

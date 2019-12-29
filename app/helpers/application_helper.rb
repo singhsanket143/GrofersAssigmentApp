@@ -34,7 +34,7 @@ module ApplicationHelper
     renderer = Redcarpet::Render::HTML.new(options)
     markdown = Redcarpet::Markdown.new(renderer, extensions)
 
-    markdown.render(text).html_safe
+    syntax_highlighter(markdown.render(text)).html_safe
   end
 
   def syntax_highlighter(html)
