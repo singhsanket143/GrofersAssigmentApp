@@ -4,7 +4,11 @@ class NotesController < ApplicationController
   # GET /notes
   # GET /notes.json
   def index
-    @notes = Note.all.order created_at: :desc
+    if params[:title].present?
+      @notes = Note.where('title LIKE ?', "%#{params[:title]}%").order created_at: :desc
+    else
+      @notes = Note.all.order created_at: :desc
+    end
     @note = Note.new
   end
 
