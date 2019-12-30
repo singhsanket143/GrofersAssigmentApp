@@ -5,12 +5,12 @@ class NotesController < ApplicationController
   # GET /notes.json
   def index
     if params[:title].present?
-      @notes = Note.where('title LIKE ?', "%#{params[:title]}%").order created_at: :desc
+      @notes = Note.where(user_id: current_user.id).where('title LIKE ?', "%#{params[:title]}%").order created_at: :desc
     elsif params[:labels].present?
       labels = params[:labels].split(',')
-      @notes = Note.joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
+      @notes = Note.where(user_id: current_user.id).joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
     else
-      @notes = Note.all.order created_at: :desc
+      @notes = Note.where(user_id: current_user.id).all.order created_at: :desc
     end
 
     if params[:start_date].present? and params[:end_date].present?
@@ -20,9 +20,9 @@ class NotesController < ApplicationController
       end_date = [end_date[2], end_date[0], end_date[1]].join('-') + ' 00:00:00'
       if params[:labels].present?
         labels = params[:labels].split(',')
-        @notes = Note.where('created_at BETWEEN ? AND ?',Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s)).joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
+        @notes = Note.where(user_id: current_user.id).where('created_at BETWEEN ? AND ?', Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s)).joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
       else
-        @notes = Note.where('created_at BETWEEN ? AND ?',Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s))
+        @notes = Note.where(user_id: current_user.id).where('created_at BETWEEN ? AND ?', Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s))
       end
     end
     @labels = Label.all
