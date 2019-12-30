@@ -6,3 +6,9 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 User.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+
+label_list = ["Medium Priority", "Non-critical", "Work", "Trackback", "Family", "Deadline", "In Progress", "Important", "Priority"]
+
+label_list.each do |label|
+  Label.create(name: label)
+end
