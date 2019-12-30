@@ -55,6 +55,11 @@ The main purpose of Admin Panel is to add/remove the labels to the notes and kee
 
 ![image](https://user-images.githubusercontent.com/29747452/71582248-476cee80-2b2f-11ea-9ba2-535366646281.png)
 
+To access the admin panel go to the route '/admin'
+Credentials for default admin:
+Email: 'admin@example.com'
+password: 'password'
+
 
 ### View all the Notes:
 Each note can be viewed, edited and deleted depending on the requirements of the user. 
