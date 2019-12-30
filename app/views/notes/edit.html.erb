@@ -1,9 +1,15 @@
-<h1>Editing Note</h1>
-
-<%= render 'form', note: @note, labels: @labels %>
-
-<%= link_to 'Show', @note %> |
-<%= link_to 'Back', notes_path %>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      Create New Note
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <%= render 'form', note: @note, labels: @labels %>
+      </blockquote>
+    </div>
+  </div>
+</div>
 
 <script>
     $(document).ready(function () {
