@@ -11,6 +11,46 @@
   </div>
 </div>
 <hr>
+<div class="container">
+  <form action="/notes">
+    <button class="btn btn-secondary">Apply Filters</button>
+    <div class="date-time-range-picker-pf input-group" id="range1">
+      <label for="datetimepicker4">Select Start
+        Date</label><input name="start_date" type="text" class="form-control" id="datetimepicker4">
+      <label class="input-group-addon" for="datetimepicker5">Select End
+        Date</label><input name="end_date" type="text" class="form-control" id="datetimepicker5">
+      <div class="dropdown btn-group dropdown-kebab-pf">
+        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="fa fa-ellipsis-v"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownKebab">
+          <li class="dropdown-item"><a href="">7 days</a></li>
+          <li class="dropdown-item"><a href="">15 days</a></li>
+          <li class="dropdown-item"><a href="">30 days</a></li>
+          <li class="dropdown-item"><a href="">90 days</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="hidden" placeholder="Labels" class="form-control" name="labels" id="labelFilterList">
+      <div class="tag-filter-list mt-3">
+      </div>
+    </div>
+
+    <div class="btn-group dropright mb-3">
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Labels
+      </button>
+      <div class="dropdown-menu">
+        <% @labels.each do |label| %>
+          <%= link_to label.name, "#", class: "dropdown-item label-filter-item" %>
+        <% end %>
+      </div>
+    </div>
+  </form>
+</div>
+
+
 <div class="container" id="notes">
   <% @notes.each do |note| %>
     <%= render 'note', note: note %>
@@ -20,45 +60,3 @@
 <div class="first wrap">
   <button type="button" id="scroll" style="position: fixed; bottom: 10px; right: 10px;">Scroll To Top</button>
 </div>
-
-<script>
-
-    let selectedTags = [];
-    $(document).ready(function () {
-        let converter = new showdown.Converter();
-        let pad = document.getElementById('note_description');
-        let markdownArea = document.getElementById('markdown');
-        let convertTextAreaToMarkdown = function () {
-            let markdownText = pad.value;
-            let html = converter.makeHtml(markdownText);
-            markdownArea.innerHTML = html;
-        };
-        $(document).on('input', pad, convertTextAreaToMarkdown);
-        convertTextAreaToMarkdown();
-
-        $("#scroll").click(function () {
-            $('html,body').animate({scrollTop: $(".navbar").offset().top}, 'slow');
-        });
-
-        $(".dropdown-item").click(function (event) {
-            event.preventDefault();
-            console.log($(this).text());
-            for(let i = 0; i < selectedTags.length; i++) {
-                if (selectedTags[i] === $(this).text()) return;
-            }
-            selectedTags.push($(this).text());
-            let input = $("#labelList");
-            $("#labelList").val(selectedTags);
-            $(".tag-list").append(`<span class="badge badge-pill badge-info mr-3">${$(this).text()} <span class="cross" style="margin-left: 5px;color: black;">x</span></span>`)
-        });
-
-        $(document).on('click', '.cross', function() {
-            let text = $($(this)[0].parentElement).text().split(" ")[0];
-            selectedTags = selectedTags.filter(function(value){
-                return value !== text;
-            });
-            $(this)[0].parentElement.remove();
-            console.log(selectedTags);
-        })
-    });
-</script>

@@ -10,8 +10,9 @@
         View Note
       </a>
       <%= link_to 'Delete Note', note, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+      <%= link_to 'Edit Note', edit_note_path(note), class: "btn btn-success" %>
     </p>
-    <div class="collapse" id="collapse_<%= note.id %>">
+    <div class="collapse mb-3" id="collapse_<%= note.id %>">
       <div class="card card-body">
         <%= markdown(note.description) %>
       </div>

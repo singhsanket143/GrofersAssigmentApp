@@ -6,11 +6,24 @@ class NotesController < ApplicationController
   def index
     if params[:title].present?
       @notes = Note.where('title LIKE ?', "%#{params[:title]}%").order created_at: :desc
-    elsif params["labels"].present?
-      labels = params["labels"].split(",")
-      @notes = Note.joins('join notes_labels on notes.id = notes_labels.note_id').where('notes_labels.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
+    elsif params[:labels].present?
+      labels = params[:labels].split(',')
+      @notes = Note.joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
     else
       @notes = Note.all.order created_at: :desc
+    end
+
+    if params[:start_date].present? and params[:end_date].present?
+      start_date = params[:start_date].split('/')
+      end_date = params[:end_date].split('/')
+      start_date = [start_date[2], start_date[0], start_date[1]].join('-') + ' 00:00:00'
+      end_date = [end_date[2], end_date[0], end_date[1]].join('-') + ' 00:00:00'
+      if params[:labels].present?
+        labels = params[:labels].split(',')
+        @notes = Note.where('created_at BETWEEN ? AND ?',Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s)).joins('join labels_notes on notes.id = labels_notes.note_id').where('labels_notes.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
+      else
+        @notes = Note.where('created_at BETWEEN ? AND ?',Date.strptime(start_date.to_time.to_s), Date.strptime(end_date.to_time.to_s))
+      end
     end
     @labels = Label.all
     @note = Note.new
@@ -28,6 +41,7 @@ class NotesController < ApplicationController
 
   # GET /notes/1/edit
   def edit
+    @labels = Label.all
   end
 
   # POST /notes
@@ -39,9 +53,8 @@ class NotesController < ApplicationController
     else
       @note.user_id = current_user.id
     end
-    byebug
-    if params["labels"].present?
-      labels = params["labels"].split(",")
+    if params['labels'].present?
+      labels = params['labels'].split(',')
       @note.labels << Label.all.where('name in (?)', labels)
     end
     respond_to do |format|
@@ -62,7 +75,12 @@ class NotesController < ApplicationController
   def update
     respond_to do |format|
       if @note.update(note_params)
-        format.html { redirect_to @note, notice: 'Note was successfully updated.' }
+        if params['labels'].present?
+          labels = params['labels'].split(',')
+          @note.labels.clear
+          @note.labels << Label.all.where('name in (?)', labels)
+        end
+        format.html { redirect_to '/', notice: 'Note was successfully updated.' }
         format.json { render :show, status: :ok, location: @note }
       else
         format.html { render :edit }
