@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
       <blockquote class="blockquote mb-0">
-        <%= render 'form', note: @note %>
+        <%= render 'form', note: @note, labels: @labels %>
       </blockquote>
     </div>
   </div>
@@ -17,14 +17,18 @@
   <% end %>
 </div>
 
-<div class="first wrap"><button type="button" id="scroll" style="position: fixed; bottom: 10px; right: 10px;">Scroll To Top</button></div>
+<div class="first wrap">
+  <button type="button" id="scroll" style="position: fixed; bottom: 10px; right: 10px;">Scroll To Top</button>
+</div>
 
 <script>
+
+    let selectedTags = [];
     $(document).ready(function () {
         let converter = new showdown.Converter();
         let pad = document.getElementById('note_description');
         let markdownArea = document.getElementById('markdown');
-        let convertTextAreaToMarkdown = function(){
+        let convertTextAreaToMarkdown = function () {
             let markdownText = pad.value;
             let html = converter.makeHtml(markdownText);
             markdownArea.innerHTML = html;
@@ -32,8 +36,29 @@
         $(document).on('input', pad, convertTextAreaToMarkdown);
         convertTextAreaToMarkdown();
 
-        $("#scroll").click(function() {
+        $("#scroll").click(function () {
             $('html,body').animate({scrollTop: $(".navbar").offset().top}, 'slow');
         });
+
+        $(".dropdown-item").click(function (event) {
+            event.preventDefault();
+            console.log($(this).text());
+            for(let i = 0; i < selectedTags.length; i++) {
+                if (selectedTags[i] === $(this).text()) return;
+            }
+            selectedTags.push($(this).text());
+            let input = $("#labelList");
+            $("#labelList").val(selectedTags);
+            $(".tag-list").append(`<span class="badge badge-pill badge-info mr-3">${$(this).text()} <span class="cross" style="margin-left: 5px;color: black;">x</span></span>`)
+        });
+
+        $(document).on('click', '.cross', function() {
+            let text = $($(this)[0].parentElement).text().split(" ")[0];
+            selectedTags = selectedTags.filter(function(value){
+                return value !== text;
+            });
+            $(this)[0].parentElement.remove();
+            console.log(selectedTags);
+        })
     });
 </script>

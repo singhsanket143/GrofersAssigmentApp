@@ -16,7 +16,11 @@
         <%= markdown(note.description) %>
       </div>
     </div>
+    <% note.labels.each do |label| %>
+      <span class="badge badge-pill badge-info mr-3"><%= label.name %></span>
+    <% end %>
   </div>
+
   <div class="card-footer text-muted">
     <%= time_ago_in_words(note.created_at) %>
   </div>

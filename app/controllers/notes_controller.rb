@@ -6,9 +6,13 @@ class NotesController < ApplicationController
   def index
     if params[:title].present?
       @notes = Note.where('title LIKE ?', "%#{params[:title]}%").order created_at: :desc
+    elsif params["labels"].present?
+      labels = params["labels"].split(",")
+      @notes = Note.joins('join notes_labels on notes.id = notes_labels.note_id').where('notes_labels.label_id in (?)',Label.all.where('name in (?)', labels).select(:id)).uniq
     else
       @notes = Note.all.order created_at: :desc
     end
+    @labels = Label.all
     @note = Note.new
   end
 
@@ -34,6 +38,11 @@ class NotesController < ApplicationController
       return
     else
       @note.user_id = current_user.id
+    end
+    byebug
+    if params["labels"].present?
+      labels = params["labels"].split(",")
+      @note.labels << Label.all.where('name in (?)', labels)
     end
     respond_to do |format|
       if @note.save
@@ -74,12 +83,12 @@ class NotesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_note
-      @note = Note.find(params[:id])
-    end
+  def set_note
+    @note = Note.find(params[:id])
+  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def note_params
-      params.require(:note).permit(:title, :description, :user_id, :is_completed)
-    end
+  def note_params
+    params.require(:note).permit(:title, :description, :user_id, :is_completed)
+  end
 end

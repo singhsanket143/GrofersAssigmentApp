@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191228124148) do
+ActiveRecord::Schema.define(version: 20191229134141) do
+
+  create_table "labels", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "labels_notes", id: false, force: :cascade do |t|
+    t.integer "note_id", null: false
+    t.integer "label_id", null: false
+  end
 
   create_table "notes", force: :cascade do |t|
     t.string "title"
